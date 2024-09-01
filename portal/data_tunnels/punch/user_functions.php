@@ -35,9 +35,12 @@ class UserFunctions {
         $column3 = 'contact_number';
         $column4 = 'password';
         $column5 = 'role_code';
+        $column6 = 'date_created';
+
+        $DateTimeColumn = date('Y-m-d H:i:s');
 
         // SQL Insert statement
-        $sql = "INSERT INTO $table ($column0, $column1, $column2, $column3, $column4, $column5) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO $table ($column0, $column1, $column2, $column3, $column4, $column5, $column6) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         // Prepare statement
         $stmt = $this->conn->prepare($sql);
@@ -47,7 +50,7 @@ class UserFunctions {
         }
 
         // Bind parameters (s - string, i - integer, d - double, b - blob)
-        $stmt->bind_param("sssisi", $this->data0, $this->data1, $this->data2, $this->data3, $this->data4, $this->data5);
+        $stmt->bind_param("sssisis", $this->data0, $this->data1, $this->data2, $this->data3, $this->data4, $this->data5, $DateTimeColumn);
 
         // Execute the statement
         if ($stmt->execute()) {

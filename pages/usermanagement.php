@@ -6,9 +6,13 @@ require_once './../portal/database/db_conn.php';
 $db = new Database();
 $connection = $db->snapConnect();
 
-// Query to get user names
+// Query to get user names:
 $user_name_query = "SELECT user_name FROM users";
 $un_result = $connection->query($user_name_query);
+
+//Query to get user roles and names:
+$user_roles = 'SELECT u_role_code, u_role_title FROM user_roles';
+$ur_result = $connection->query($user_roles);
 
 ?>
 
@@ -41,7 +45,7 @@ $un_result = $connection->query($user_name_query);
                 alert("Last Name is required.");
                 return false;
             }
-            if (contactNumber === "" || !/^\d{11}$/.test(contactNumber)) {
+            if (contactNumber === "" || !/^\d{10}$/.test(contactNumber)) {
                 alert("A valid 11-digit Mobile Number is required.");
                 return false;
             }
@@ -53,7 +57,7 @@ $un_result = $connection->query($user_name_query);
                 alert("Passwords do not match.");
                 return false;
             }
-            if (roleCode === "" || !/^[123]$/.test(roleCode)) {
+            if (roleCode === "" || !/^[1234567]$/.test(roleCode)) {
                 alert("Role Code must be 1, 2, or 3.");
                 return false;
             }
@@ -87,10 +91,11 @@ $un_result = $connection->query($user_name_query);
         <!-- role -->
         <select name="role_code">
             <option value="" disabled selected>Select a role</option>
-            <option value="1">Admin</option>
-            <option value="2">Director</option>
-            <option value="3">Warehouse Personnel</option>
-            <option value="4">Department Head</option>
+            <?php
+                while ($row = $ur_result->fetch_assoc()) {
+                    echo '<option value="' . htmlspecialchars($row['u_role_code']) . '">' . htmlspecialchars($row['u_role_title']) . '</option>';
+                }
+            ?>
         </select><br><br>
 
         <!-- form code & button -->
@@ -106,9 +111,9 @@ $un_result = $connection->query($user_name_query);
         <select name="user_name">
             <option value="" disabled selected>Choose an account</option>
             <?php
-            while ($row = $un_result->fetch_assoc()) {
-                echo '<option value="' . htmlspecialchars($row['user_name']) . '">' . htmlspecialchars($row['user_name']) . '</option>';
-            }
+                while ($row = $un_result->fetch_assoc()) {
+                    echo '<option value="' . htmlspecialchars($row['user_name']) . '">' . htmlspecialchars($row['user_name']) . '</option>';
+                }
             ?>
         </select><br><br>
 
